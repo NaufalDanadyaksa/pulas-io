@@ -2,7 +2,7 @@
 
 **Versi PRD:** 1.0.0  
 **Tanggal Plan:** 15 September 2026  
-**Status:** Draft — Menunggu Approval
+**Status:** 🟡 Phase 1 sedang berjalan — Fase 1.1 ✅ selesai
 
 ---
 
@@ -14,14 +14,16 @@ Plan ini mencakup 4 fase dari PRD. Setiap fase bisa dirilis secara independen.
 
 ---
 
-## Open Questions
+## Keputusan Arsitektur
 
-> Jawab pertanyaan ini sebelum eksekusi Phase 1:
+> Pertanyaan-pertanyaan berikut telah dijawab. Semua pilihan mengutamakan **free tier** dan **efisiensi operasional**.
 
-1. **Yjs Transport**: Apakah Supabase Realtime Broadcast cukup untuk awal, atau langsung setup `y-websocket` dedicated server?
-2. **Thumbnail**: Puppeteer di Edge Function, atau library canvas server-side (`canvas` npm)?
-3. **Rate Limiting**: Di Edge Functions atau di level Supabase project settings?
-4. **Analytics (Posthog)**: Mulai dari Phase 1 atau baru Phase 4?
+| # | Topik | Keputusan | Alasan |
+|---|---|---|---|
+| 1 | **Yjs Transport** | ✅ **Supabase Realtime Broadcast** | Sudah included dalam free tier Supabase. Tidak butuh server websocket dedicated berbayar. Cocok untuk MVP dan scaling awal. `y-websocket` akan dipertimbangkan hanya jika terjadi bottleneck di skala >1000 concurrent users. |
+| 2 | **Thumbnail Generation** | ✅ **`OffscreenCanvas` di client-side** | Thumbnail di-generate di browser saat canvas di-save, lalu di-upload ke Supabase Storage. Tidak memerlukan Edge Function berat (Puppeteer butuh memory tinggi & cold start lambat). Hemat compute quota. |
+| 3 | **Rate Limiting** | ✅ **Supabase project settings** | Built-in, gratis, zero kode tambahan. Rate limit di Edge Function memerlukan Redis/Deno KV yang menambah kompleksitas. Cukup untuk MVP. |
+| 4 | **Analytics (Posthog)** | ✅ **Mulai di Phase 4** | MVP tidak memerlukan analytics. PostHog free tier (1 juta events/bulan) akan diintegrasikan di Phase 4 (Scaling & Analytics). |
 
 ---
 
@@ -31,7 +33,7 @@ Plan ini mencakup 4 fase dari PRD. Setiap fase bisa dirilis secara independen.
 
 ---
 
-### Fase 1.1 — Monorepo & Infrastruktur Dasar
+### Fase 1.1 — Monorepo & Infrastruktur Dasar ✅
 
 **Workflows:** `02-frontend-feature.md`, `03-canvas-editor.md`, `06-testing.md`
 

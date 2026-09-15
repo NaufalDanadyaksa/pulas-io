@@ -1,7 +1,7 @@
 # Task Tracker — pulas.io
 
 **Terakhir diupdate:** 15 September 2026  
-**Status keseluruhan:** Belum dimulai
+**Status keseluruhan:** 🟡 Phase 1 sedang berjalan — Fase 1.1 ✅ selesai
 
 Legend: `[ ]` belum dimulai · `[/]` sedang berjalan · `[x]` selesai
 
