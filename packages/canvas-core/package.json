@@ -1,0 +1,30 @@
+{
+  "name": "@pulas/canvas-core",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./schemas": "./src/schemas.ts",
+    "./elements": "./src/elements.ts",
+    "./history": "./src/history.ts",
+    "./culling": "./src/culling.ts",
+    "./renderer": "./src/renderer.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@pulas/types": "workspace:*",
+    "@pulas/utils": "workspace:*",
+    "roughjs": "^4.6.6",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.7"
+  }
+}

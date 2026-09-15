@@ -10,20 +10,27 @@ Legend: `[ ]` belum dimulai · `[/]` sedang berjalan · `[x]` selesai
 ## PHASE 1 — MVP (Bulan 1–2)
 
 ### Fase 1.1 — Monorepo & Infrastruktur Dasar
+- [x] **Sub-Fase 1.1.A — Monorepo Root & Core Packages**
+  - [x] Setup root `package.json`, `pnpm-workspace.yaml`, `turbo.json`, `tsconfig.json`, `.gitignore`
+  - [x] Setup `packages/types/` (`@pulas/types`) — DB stubs, canvas types, presence types
+  - [x] Setup `packages/utils/` (`@pulas/utils`) — `cn()`, `formatDate()`, `generateUserColor()`, `nanoid` helper
+  - [x] Tulis unit tests di `packages/utils/` dengan Vitest
+- [x] **Sub-Fase 1.1.B — Canvas Engine Foundation**
+  - [x] Setup `packages/canvas-core/` (`@pulas/canvas-core`)
+  - [x] Element types + Zod schema validation (rectangle, ellipse, arrow, line, text, freedraw, image)
+  - [x] Element factories (`createCanvasElement`)
+  - [x] Rough.js renderer wrapper adapter
+  - [x] Viewport culling calculation helper
+  - [x] History manager class (undo/redo stack, max 100 langkah)
+  - [x] Tulis unit tests di `packages/canvas-core/` dengan Vitest
+- [x] **Sub-Fase 1.1.C — UI Package & Web App Shell**
+  - [x] Setup `packages/ui/` (`@pulas/ui`) — Tailwind v4 + Radix UI primitives (`Button`, `Input`, `Dialog`, `Select`, `Toast`, `Skeleton`, `Avatar`, `Badge`)
+  - [x] Setup `apps/web/` (`@pulas/web`) — Vite + React 19 + TypeScript strict mode
+  - [x] Setup TanStack Router route tree & root layout shell
+  - [x] Setup TanStack Query client & Zustand store boilerplate
+  - [x] Setup Tailwind CSS v4 design tokens di `apps/web/`
+  - [x] Verifikasi build monorepo: `pnpm run typecheck`, `pnpm run test`, `pnpm run build`
 
-- [ ] Setup `turbo.json` dengan pipeline build/dev/test/lint
-- [ ] Setup `pnpm-workspace.yaml`
-- [ ] Buat `packages/types/` — generate TypeScript types dari Supabase
-- [ ] Buat `packages/ui/` — Button, Input, Modal, Select, Toast, Skeleton, Avatar, Badge
-- [ ] Buat `packages/utils/` — `cn()`, `formatDate()`, `generateUserColor()`
-- [ ] Buat `packages/canvas-core/` — element factories, Rough.js renderer, history manager
-  - [ ] Element types + Zod schema (rectangle, ellipse, arrow, line, text, freedraw, image)
-  - [ ] Rough.js renderer dengan viewport culling
-  - [ ] History manager (push, undo, redo, max 100 langkah)
-- [ ] Setup `apps/web/` — Vite + React 19 + TypeScript strict
-  - [ ] Install semua dependencies (TanStack Router, TanStack Query, Zustand, Tailwind v4, RHF, Zod, Radix UI)
-  - [ ] Konfigurasi TypeScript strict mode
-  - [ ] Konfigurasi Tailwind CSS v4 + design tokens
 
 ---
 

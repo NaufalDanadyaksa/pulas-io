@@ -33,38 +33,29 @@ Plan ini mencakup 4 fase dari PRD. Setiap fase bisa dirilis secara independen.
 
 ### Fase 1.1 — Monorepo & Infrastruktur Dasar
 
-#### [NEW] `turbo.json`
-- Pipeline: `build`, `dev`, `test`, `lint` dengan cache output `dist/`, `.turbo/`
+**Workflows:** `02-frontend-feature.md`, `03-canvas-editor.md`, `06-testing.md`
 
-#### [NEW] `pnpm-workspace.yaml`
-- Workspace: `apps/*`, `packages/*`, `supabase/`
+#### Sub-Fase 1.1.A — Monorepo Root & Core Packages (`packages/types`, `packages/utils`)
+- [NEW] `turbo.json` — Pipeline: `build`, `dev`, `test`, `lint`, `typecheck`
+- [NEW] `pnpm-workspace.yaml` — Workspace: `apps/*`, `packages/*`
+- [NEW] `package.json` & `tsconfig.json` — Root config dengan TypeScript strict mode
+- [NEW] `packages/types/` (`@pulas/types`) — Database stubs, canvas element types, presence/collaboration types
+- [NEW] `packages/utils/` (`@pulas/utils`) — `cn()`, `formatDate()`, `generateUserColor()`, `nanoid` helper + Vitest unit tests
 
-#### [NEW] `packages/types/src/database.types.ts`
-- Auto-generate dari Supabase: `supabase gen types typescript`
-- Re-export semua types yang dipakai frontend
+#### Sub-Fase 1.1.B — Canvas Engine Foundation (`packages/canvas-core`)
+- [NEW] `packages/canvas-core/` (`@pulas/canvas-core`) — Element factories (`createCanvasElement`), Rough.js renderer wrapper
+- [NEW] Zod schemas untuk semua tipe elemen (`rectangle`, `ellipse`, `arrow`, `line`, `text`, `freedraw`, `image`)
+- [NEW] Viewport culling algorithm helper
+- [NEW] `HistoryManager` class (Undo/Redo stack dengan batas 100 langkah) + Vitest unit tests
 
-#### [NEW] `packages/ui/`
-- Shared komponen Radix UI + Tailwind CSS v4
-- Komponen dasar: `Button`, `Input`, `Modal`, `Select`, `Toast`, `Skeleton`, `Avatar`, `Badge`
+#### Sub-Fase 1.1.C — UI Package & Web App Shell (`packages/ui`, `apps/web`)
+- [NEW] `packages/ui/` (`@pulas/ui`) — Radix UI + Tailwind CSS v4 primitives (`Button`, `Input`, `Dialog`, `Select`, `Toast`, `Skeleton`, `Avatar`, `Badge`)
+- [NEW] `apps/web/` (`@pulas/web`) — Vite + React 19 + TypeScript strict mode
+- [NEW] TanStack Router configuration + root route shell
+- [NEW] TanStack Query client setup + Zustand store boilerplate
+- [NEW] Tailwind CSS v4 design tokens & theme setup
+- [NEW] Full verification: `pnpm run typecheck`, `pnpm run test`, `pnpm run build`
 
-#### [NEW] `packages/utils/src/`
-- `cn()` — class merge utility (clsx + tailwind-merge)
-- `formatDate()` — relative date formatting
-- `generateUserColor(userId)` — deterministik user color
-
-#### [NEW] `packages/canvas-core/src/`
-- Element factories: `createElement(type, overrides)` per type
-- Zod schema untuk setiap element type
-- Rough.js renderer dengan viewport culling
-- History manager: push/undo/redo, max 100 langkah
-
-#### [NEW] `apps/web/`
-- Vite + React 19 + TypeScript (strict mode, `noImplicitAny: true`)
-- TanStack Router + TanStack Query v5
-- Zustand dengan immer middleware
-- Tailwind CSS v4 dengan design tokens
-- React Hook Form + Zod
-- Radix UI primitives
 
 ---
 
