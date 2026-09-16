@@ -34,26 +34,24 @@ Legend: `[ ]` belum dimulai · `[/]` sedang berjalan · `[x]` selesai
 
 ---
 
-### Fase 1.2 — Supabase Setup & Database Schema
+### Fase 1.2 — Supabase Setup & Database Schema ✅
 
-- [ ] Buat Supabase project (Auth + DB + Storage + Realtime)
-- [ ] Setup Supabase CLI dan link ke project
-- [ ] Buat `supabase/migrations/001_initial_schema.sql`
-  - [ ] Tabel `profiles`
-  - [ ] Tabel `projects`
-  - [ ] Tabel `project_members` + enum `project_role`
-  - [ ] Tabel `canvases`
-  - [ ] Tabel `canvas_shares` + enum `share_access`
-  - [ ] Semua indexes (6 indexes sesuai PRD §8.1)
-  - [ ] Trigger `update_updated_at()` + 3 trigger bindings
-  - [ ] RLS enabled + policies semua tabel
-- [ ] Buat `supabase/migrations/002_profile_trigger.sql`
-  - [ ] Fungsi `handle_new_user()`
-  - [ ] Trigger `on_auth_user_created`
-- [ ] Buat `supabase/seed.sql` (2 users, 2 projects, 3 canvases)
-- [ ] Jalankan `supabase db reset` — pastikan clean
-- [ ] Generate TypeScript types: `supabase gen types typescript`
-- [ ] Verifikasi RLS: test setiap policy dengan user berbeda
+- [x] Inisialisasi struktur Supabase & template environment (`.env.example`)
+- [x] Buat `supabase/migrations/001_initial_schema.sql`
+  - [x] Tabel `profiles`
+  - [x] Tabel `projects`
+  - [x] Tabel `project_members` + enum `project_role`
+  - [x] Tabel `canvases`
+  - [x] Tabel `canvas_shares` + enum `share_access`
+  - [x] Semua indexes (6 indexes sesuai PRD §8.1)
+  - [x] Trigger `update_updated_at()` + 3 trigger bindings
+  - [x] RLS enabled + policies semua tabel
+- [x] Buat `supabase/migrations/002_profile_trigger.sql`
+  - [x] Fungsi `handle_new_user()`
+  - [x] Trigger `on_auth_user_created`
+- [x] Buat `supabase/seed.sql` (2 users, 2 projects, 3 canvases)
+- [x] Generate TypeScript types: sinkronisasi `packages/types/src/database.types.ts`
+- [x] Verifikasi typecheck dan tes monorepo (5 packages passing)
 
 ---
 

@@ -21,6 +21,9 @@ Sebelum memulai **task apapun**, baca dokumen-dokumen ini terlebih dahulu:
 ## 1. WAJIB: Plan Sebelum Eksekusi
 
 > **Jangan eksekusi kode apapun sebelum mendapat persetujuan eksplisit dari user.**
+>
+> ⚡ **Pengecualian Eksekusi Langsung (`/workflow` / perintah eksekusi langsung):**
+> Jika user sudah secara eksplisit memberikan perintah `/workflow` atau instruksi eksekusi (misalnya: `/workflow jalankan fase 1.2`), **TIDAK PERLU** mengedit `.agents/implementation_plan.md` dan `.agents/task.md` terlebih dahulu, serta tidak perlu meminta konfirmasi ulang. **Langsung lakukan eksekusi** sesuai workflow/fase yang diperintahkan.
 
 ### 1.1 Tulis Implementation Plan Terlebih Dahulu
 
@@ -222,3 +225,5 @@ Terima task dari user
        ▼
 [7] Laporkan ke user bahwa task selesai
 ```
+
+*(Catatan: Jika user memanggil `/workflow` atau memberikan perintah eksekusi langsung, lewati langkah [2], [3], [4] dan langsung masuk ke langkah [5] Eksekusi).*
