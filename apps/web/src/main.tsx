@@ -5,7 +5,11 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { ToastProvider, ToastViewport } from '@pulas/ui';
 import { router } from './routes/router';
 import { queryClient } from './lib/query-client';
+import { useAuthStore } from './stores/authStore';
 import './index.css';
+
+// Initialize Supabase auth session listener on start
+useAuthStore.getState().initialize();
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {

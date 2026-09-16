@@ -1,73 +1,120 @@
-# Walkthrough — Fase 1.2: Supabase Setup & Database Schema
+# Walkthrough — Fase 1.3: Authentication
 
 **Tanggal Selesai:** 2026-09-16  
-**Fase yang Dikerjakan:** Fase 1.2 (Supabase Setup & Database Schema)
+**Fase yang Dikerjakan:** Fase 1.3 (Authentication)
 
 ---
 
 ## Ringkasan Perubahan
 
 ### File Baru
-- **`supabase/migrations/001_initial_schema.sql`**:
-  - Ekstensi `uuid-ossp`
-  - Enums `project_role` (`viewer`, `editor`, `admin`), `share_access` (`view`, `edit`)
-  - Tabel `profiles`: PK references `auth.users(id)` ON DELETE CASCADE, unique `username`, `display_name`, `avatar_url`, timestamps
-  - Tabel `projects`: PK UUID, `owner_id` references `auth.users(id)`, `name`, `description`, `color`, `icon`, timestamps
-  - Tabel `project_members`: Composite PK `(project_id, user_id)`, `role`, `invited_by`, `joined_at`
-  - Tabel `canvases`: PK UUID, `project_id`, `name`, `data` (`jsonb`), `thumbnail_url`, `order_index`, soft delete `deleted_at`, `created_by`, `last_edited_by`, timestamps
-  - Tabel `canvas_shares`: PK UUID, `canvas_id`, `created_by`, `access`, `password`, `is_active`, `expires_at`, timestamps
-  - 6 Indexes sesuai PRD §8.1 (`idx_projects_owner`, `idx_project_members_user`, `idx_canvases_project`, `idx_canvases_deleted`, `idx_canvases_order`, `idx_canvas_shares_canvas`)
-  - Trigger `update_updated_at()` otomatis pada `profiles`, `projects`, `canvases`
-  - RLS Policies lengkap pada 5 tabel (`profiles`, `projects`, `project_members`, `canvases`, `canvas_shares`)
-- **`supabase/migrations/002_profile_trigger.sql`**:
-  - Fungsi `public.handle_new_user()` dengan `SECURITY DEFINER`
-  - Trigger `on_auth_user_created` `AFTER INSERT ON auth.users` untuk auto-insert row ke tabel `public.profiles` saat registrasi
-- **`supabase/seed.sql`**:
-  - 2 test users (`alex@pulas.io`, `bella@pulas.io`)
-  - 2 test projects ("Design System Whiteboard", "Sprint Planning Q4")
-  - Project membership (Bella sebagai editor)
-  - 3 canvases dengan data elemen dummy (`rectangle`, `ellipse`, `arrow`, `text`)
-- **`.env.example` & `apps/web/.env.example`**:
-  - Template konfigurasi kredensial `VITE_SUPABASE_URL` dan `VITE_SUPABASE_ANON_KEY`
+1. **`apps/web/src/lib/supabase.ts`**:
+   - Inisialisasi Supabase client dengan typed `Database` dari `@pulas/types`.
+   - Konfigurasi `persistSession: true`, `autoRefreshToken: true`, dan `detectSessionInUrl: true`.
+2. **`apps/web/src/stores/authStore.ts`**:
+   - Zustand store untuk mengelola state autentikasi: `user`, `session`, `isLoading`, `isInitialized`.
+   - Actions: `initialize()`, `signOut()`.
+   - Subscription ke `supabase.auth.onAuthStateChange` untuk sinkronisasi state login secara otomatis.
+3. **`apps/web/src/features/auth/schemas/auth.schema.ts`**:
+   - Validasi schema menggunakan Zod: `loginSchema`, `registerSchema` (dengan password match refinement), `resetPasswordSchema`, dan `updatePasswordSchema`.
+   - Ekspor TypeScript types yang terinferensi (`LoginInput`, `RegisterInput`, dll.).
+4. **`apps/web/src/features/auth/components/OAuthButtons.tsx`**:
+   - Komponen tombol OAuth untuk Google dan GitHub yang terhubung dengan `supabase.auth.signInWithOAuth`.
+   - Callback error handling dan accessible icon SVG & aria attributes.
+5. **`apps/web/src/features/auth/components/LoginForm.tsx`**:
+   - Form masuk dengan React Hook Form + Zod resolver.
+   - Indikator loading, error alert banner, dan link ke reset password.
+6. **`apps/web/src/features/auth/components/RegisterForm.tsx`**:
+   - Form pendaftaran akun dengan konfirmasi kata sandi dan pengiriman metadata `full_name` agar auto-create row di tabel `profiles` melalui trigger database Supabase.
+   - Status banner cek email jika akun membutuhkan verifikasi email.
+7. **`apps/web/src/features/auth/components/ForgotPasswordDialog.tsx`**:
+   - Modal dialog Radix UI untuk pengiriman email reset password via `supabase.auth.resetPasswordForEmail`.
+8. **`apps/web/src/features/auth/pages/LoginPage.tsx` & `RegisterPage.tsx`**:
+   - Halaman auth modern dengan kartu estetika premium, integrasi OAuth, form credentials, dan tautan navigasi.
+9. **`apps/web/src/features/auth/pages/AuthCallbackPage.tsx` & `apps/web/src/routes/auth/callback.tsx`**:
+   - Handler callback OAuth dan konfirmasi email untuk redirect otomatis ke `/dashboard`.
+10. **`apps/web/src/routes/_authenticated.tsx`**:
+    - Layout guard autentikasi (`requireAuthGuard`) yang memproteksi rute privat dan mengalihkan akses tanpa sesi ke `/login`.
+11. **`apps/web/src/features/dashboard/pages/DashboardPage.tsx`**:
+    - Halaman dashboard awal terautentikasi: menampilkan profil pengguna, status sesi Supabase, badge verifikasi, metrik cepat, dan tombol logout.
+12. **Suite Pengujian Unit & Komponen**:
+    - `apps/web/src/features/auth/__tests__/auth.schema.test.ts` (10 tests)
+    - `apps/web/src/features/auth/__tests__/authStore.test.ts` (3 tests)
+    - `apps/web/src/features/auth/__tests__/LoginForm.test.tsx` (4 tests)
+    - `apps/web/src/features/auth/__tests__/RegisterForm.test.tsx` (4 tests)
+    - `apps/web/src/features/auth/__tests__/OAuthButtons.test.tsx` (4 tests)
+    - `apps/web/src/routes/__tests__/routeGuards.test.ts` (2 tests)
 
 ### File Dimodifikasi
-- **`packages/types/src/database.types.ts`**:
-  - Sinkronisasi tipe `Database` TypeScript agar 100% presisi dengan skema database SQL
+- **`apps/web/src/routes/router.tsx`**:
+  - Konfigurasi TanStack Router dengan rute `/login`, `/register`, `/auth/callback`, serta nested layout `_authenticated` yang memproteksi rute `/dashboard`.
+  - Integrasi header dinamis di root route (menampilkan menu Masuk/Daftar jika unauthenticated, atau Avatar + Dashboard + Logout jika authenticated).
+- **`apps/web/src/main.tsx`**:
+  - Panggilan `useAuthStore.getState().initialize()` saat startup aplikasi.
+- **`apps/web/vite.config.ts` & `apps/web/tsconfig.json`**:
+  - Konfigurasi alias `@/*` mengarah ke `./src/*`.
+- **`apps/web/package.json`**:
+  - Penambahan script `"test": "vitest run"` dan dependencies testing (`vitest`, `@testing-library/react`, `@testing-library/jest-dom`, `jsdom`).
+- **`turbo.json`**:
+  - Penyesuaian output task `test` untuk integrasi Turborepo cache yang optimal.
 - **`.agents/task.md`**:
-  - Checklist Fase 1.2 ditandai selesai (`[x]`)
-- **`.agents/rules/rules.md`**:
-  - Ditambahkan aturan pengecualian eksekusi langsung untuk perintah `/workflow`
+  - Pembaruan seluruh checklist Fase 1.3 menjadi selesai (`[x]`).
 
 ---
 
 ## Langkah Pengujian Manual
 
-1. **Review Migrasi SQL**:
-   Buka file [001_initial_schema.sql](file:///Users/md101/dev/js/pulas-io/supabase/migrations/001_initial_schema.sql) dan [002_profile_trigger.sql](file:///Users/md101/dev/js/pulas-io/supabase/migrations/002_profile_trigger.sql).
-   - **Expected result:** Semua definisi tabel memiliki constraint foreign key yang tepat, RLS di-enable, policy mencakup operasi CRUD sesuai role pengguna, dan trigger auto-update serta auto-create profile terpasang.
-2. **Deploy ke Supabase Dashboard / Local**:
-   - Jika menggunakan Supabase Cloud: Salin isi `001_initial_schema.sql` dan `002_profile_trigger.sql` ke Supabase SQL Editor atau jalankan `supabase db push --linked`.
-   - Jika menggunakan Supabase Local: Jalankan `supabase db reset` saat Docker aktif.
-   - **Expected result:** Skema terpasang tanpa sintaks error, tabel muncul di Table Editor, dan RLS policies aktif di Authentication → Policies.
+1. **Jalankan Aplikasi Web Secara Lokal**:
+   ```bash
+   pnpm --filter @pulas/web dev
+   ```
+   Buka `http://localhost:5173`.
+   - **Expected result:** Header landing page menampilkan tombol "Masuk" dan "Daftar Gratis".
+
+2. **Coba Akses Rute Terproteksi Langsung**:
+   Ketik `http://localhost:5173/dashboard` di address bar browser.
+   - **Expected result:** Rute langsung di-redirect ke `http://localhost:5173/login`.
+
+3. **Pengujian Halaman Login & Registrasi**:
+   - Buka `http://localhost:5173/login`.
+   - Coba submit form kosong: error validasi field muncul ("Email wajib diisi", "Password minimal 8 karakter").
+   - Klik "Lupa sandi?": modal `ForgotPasswordDialog` terbuka dengan input email pemulihan.
+   - Klik "Daftar sekarang": navigasi berpindah ke `http://localhost:5173/register`.
+   - Isi form register dengan konfirmasi password tidak sama: muncul pesan "Konfirmasi password tidak sesuai".
+
+4. **Pengujian OAuth Buttons**:
+   - Pada halaman login/register, tombol "Lanjutkan dengan Google" dan "Lanjutkan dengan GitHub" tersedia dengan SVG icon resmi dan status loading saat diklik.
 
 ---
 
 ## Pengujian Otomatis
 
-### 1. Typecheck Workspace
+### 1. Typecheck Monorepo (TypeScript Strict Mode)
 ```bash
 pnpm run typecheck
 ```
-- **Hasil:** 5 package lulus validasi tipe TypeScript (`@pulas/types`, `@pulas/utils`, `@pulas/canvas-core`, `@pulas/ui`, `@pulas/web`).
+- **Hasil:** 5 dari 5 paket lulus validasi tanpa error (`@pulas/types`, `@pulas/utils`, `@pulas/canvas-core`, `@pulas/ui`, `@pulas/web`).
 
-### 2. Unit Tests (Vitest)
+### 2. Unit & Component Test Suite
 ```bash
 pnpm run test
 ```
-- **Hasil:** 22/22 unit tests lulus passing di `@pulas/utils` dan `@pulas/canvas-core`.
+- **Hasil:** 49 test passing (22 di packages canvas-core & utils + 27 di apps/web).
+  - 10 tests `auth.schema.test.ts`
+  - 4 tests `LoginForm.test.tsx`
+  - 4 tests `RegisterForm.test.tsx`
+  - 4 tests `OAuthButtons.test.tsx`
+  - 3 tests `authStore.test.ts`
+  - 2 tests `routeGuards.test.ts`
+
+### 3. Production Build
+```bash
+pnpm run build
+```
+- **Hasil:** Bundling Vite & tsc berhasil tanpa error, file output siap di `apps/web/dist/`.
 
 ---
 
 ## Known Issues / Catatan
-- File migrasi sepenuhnya dirancang idempotent (`IF NOT EXISTS`, `CREATE OR REPLACE`, `DROP POLICY IF EXISTS`).
-- Siap digunakan langsung untuk tahap selanjutnya: **Fase 1.3 — Authentication**.
+- Provider OAuth (Google Console & GitHub App) memerlukan konfigurasi Client ID & Secret di dashboard project Supabase (`kdewomubuegtahadzihz.supabase.co`) dan redirect URI `https://<project-ref>.supabase.co/auth/v1/callback` serta origin lokal `http://localhost:5173/auth/callback`.
+- Fitur auto-create profile di tabel `profiles` telah terintegrasi dengan trigger database `handle_new_user()` yang membaca `full_name` dari metadata registrasi.

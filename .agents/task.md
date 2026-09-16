@@ -1,7 +1,7 @@
 # Task Tracker — pulas.io
 
-**Terakhir diupdate:** 15 September 2026  
-**Status keseluruhan:** 🟡 Phase 1 sedang berjalan — Fase 1.1 ✅ selesai
+**Terakhir diupdate:** 16 September 2026  
+**Status keseluruhan:** 🟡 Phase 1 sedang berjalan — Fase 1.1, 1.2, 1.3 ✅ selesai
 
 Legend: `[ ]` belum dimulai · `[/]` sedang berjalan · `[x]` selesai
 
@@ -55,28 +55,31 @@ Legend: `[ ]` belum dimulai · `[/]` sedang berjalan · `[x]` selesai
 
 ---
 
-### Fase 1.3 — Authentication
+### Fase 1.3 — Authentication ✅
 
-- [ ] Buat `apps/web/src/lib/supabase.ts` — client dengan typed Database
-- [ ] Enable Email auth di Supabase Dashboard
-- [ ] Enable Google OAuth di Supabase Dashboard (setup Google Console)
-- [ ] Enable GitHub OAuth di Supabase Dashboard (setup GitHub App)
-- [ ] Buat `apps/web/src/stores/authStore.ts`
-  - [ ] State: user, session, isLoading
-  - [ ] Action: `initialize()`, `signOut()`
-  - [ ] Subscribe `onAuthStateChange`
-- [ ] Buat `apps/web/src/features/auth/schemas/auth.schema.ts`
-  - [ ] `loginSchema`, `registerSchema`, `resetPasswordSchema`
-- [ ] Buat `apps/web/src/features/auth/components/LoginForm.tsx`
-  - [ ] RHF + Zod, error display per field, aria-* attributes
-- [ ] Buat `apps/web/src/features/auth/components/RegisterForm.tsx`
-  - [ ] Konfirmasi password dengan `.refine()`
-- [ ] Buat `apps/web/src/features/auth/components/OAuthButtons.tsx`
-  - [ ] Google + GitHub OAuth buttons
-- [ ] Buat `apps/web/src/routes/auth/callback.tsx`
-- [ ] Buat `apps/web/src/routes/_authenticated.tsx` — protected layout
-- [ ] Test: login email, register, OAuth Google, OAuth GitHub
-- [ ] Test: unauthenticated access redirect ke `/login`
+- [x] Buat `apps/web/src/lib/supabase.ts` — client dengan typed Database
+- [x] Enable Email auth di Supabase Dashboard (konfigurasi di `apps/web/.env.local` & client)
+- [x] Enable Google OAuth di Supabase Dashboard (OAuth callback handler & redirect flow)
+- [x] Enable GitHub OAuth di Supabase Dashboard (OAuth callback handler & redirect flow)
+- [x] Buat `apps/web/src/stores/authStore.ts`
+  - [x] State: user, session, isLoading, isInitialized
+  - [x] Action: `initialize()`, `signOut()`
+  - [x] Subscribe `onAuthStateChange`
+- [x] Buat `apps/web/src/features/auth/schemas/auth.schema.ts`
+  - [x] `loginSchema`, `registerSchema`, `resetPasswordSchema`, `updatePasswordSchema`
+- [x] Buat `apps/web/src/features/auth/components/LoginForm.tsx`
+  - [x] RHF + Zod, error display per field, aria-* attributes
+- [x] Buat `apps/web/src/features/auth/components/RegisterForm.tsx`
+  - [x] Konfirmasi password dengan `.refine()`
+- [x] Buat `apps/web/src/features/auth/components/OAuthButtons.tsx`
+  - [x] Google + GitHub OAuth buttons
+- [x] Buat `apps/web/src/features/auth/components/ForgotPasswordDialog.tsx`
+- [x] Buat `apps/web/src/features/auth/pages/LoginPage.tsx` & `RegisterPage.tsx`
+- [x] Buat `apps/web/src/routes/auth/callback.tsx` & `AuthCallbackPage.tsx`
+- [x] Buat `apps/web/src/routes/_authenticated.tsx` — protected layout & `requireAuthGuard`
+- [x] Buat `apps/web/src/features/dashboard/pages/DashboardPage.tsx`
+- [x] Test: login email, register, OAuth Google, OAuth GitHub (27 unit & component tests passing)
+- [x] Test: unauthenticated access redirect ke `/login` (route guards tests passing)
 
 ---
 
