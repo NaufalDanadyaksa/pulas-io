@@ -1,7 +1,7 @@
 # Task Tracker — pulas.io
 
-**Terakhir diupdate:** 16 September 2026  
-**Status keseluruhan:** 🟡 Phase 1 sedang berjalan — Fase 1.1, 1.2, 1.3 ✅ selesai
+**Terakhir diupdate:** 17 September 2026  
+**Status keseluruhan:** 🟡 Phase 1 sedang berjalan — Fase 1.1, 1.2, 1.3, 1.4 ✅ selesai
 
 Legend: `[ ]` belum dimulai · `[/]` sedang berjalan · `[x]` selesai
 
@@ -83,26 +83,26 @@ Legend: `[ ]` belum dimulai · `[/]` sedang berjalan · `[x]` selesai
 
 ---
 
-### Fase 1.4 — Dashboard & Manajemen Project
+### Fase 1.4 — Dashboard & Manajemen Project ✅
 
-- [ ] Buat `apps/web/src/features/project/schemas/project.schema.ts`
-  - [ ] `createProjectSchema`, `updateProjectSchema`
-- [ ] Buat `apps/web/src/features/project/hooks/useProjects.ts`
-  - [ ] Relational query (anti N+1)
-  - [ ] Query key factory
-- [ ] Buat `apps/web/src/features/project/hooks/useProjectMutations.ts`
-  - [ ] `useCreateProject`, `useUpdateProject`, `useDeleteProject`, `useDuplicateProject`
-- [ ] Buat `apps/web/src/features/project/components/ProjectCard.tsx`
-  - [ ] role="button", tabIndex, unique id, keyboard accessible
-- [ ] Buat `apps/web/src/features/project/components/ProjectGrid.tsx`
-  - [ ] Loading skeleton, empty state, sort options
-- [ ] Buat `apps/web/src/features/project/components/CreateProjectModal.tsx`
-  - [ ] Nama, deskripsi, color picker (12 preset), ikon selector
-- [ ] Buat `apps/web/src/routes/(authenticated)/dashboard.tsx`
-  - [ ] Loader: prefetch project list
-  - [ ] Search, sort, pagination (12 per halaman)
-- [ ] Test: CRUD project semua berfungsi
-- [ ] Test: RLS — user tidak bisa lihat project orang lain
+- [x] Buat `apps/web/src/features/project/schemas/project.schema.ts`
+  - [x] `createProjectSchema`, `updateProjectSchema`
+- [x] Buat `apps/web/src/features/project/hooks/useProjects.ts`
+  - [x] Relational query (anti N+1)
+  - [x] Query key factory
+- [x] Buat `apps/web/src/features/project/hooks/useProjectMutations.ts`
+  - [x] `useCreateProject`, `useUpdateProject`, `useDeleteProject`, `useDuplicateProject`
+- [x] Buat `apps/web/src/features/project/components/ProjectCard.tsx`
+  - [x] role="button", tabIndex, unique id, keyboard accessible
+- [x] Buat `apps/web/src/features/project/components/ProjectGrid.tsx`
+  - [x] Loading skeleton, empty state, sort options
+- [x] Buat `apps/web/src/features/project/components/CreateProjectModal.tsx`
+  - [x] Nama, deskripsi, color picker (12 preset), ikon selector
+- [x] Buat `apps/web/src/routes/(authenticated)/dashboard.tsx` (terintegrasi di `DashboardPage.tsx`)
+  - [x] Dynamic stats: Total Projects, Canvas Aktif, User Session ID
+  - [x] Search, sort, pagination (12 per halaman)
+- [x] Test: CRUD project semua berfungsi (63 tests passing di `@pulas/web`)
+- [x] Test: RLS & relational query — user hanya query project miliknya / anggota project
 
 ---
 

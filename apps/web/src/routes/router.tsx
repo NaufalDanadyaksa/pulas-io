@@ -240,12 +240,25 @@ const dashboardRoute = createRoute({
   component: DashboardPage,
 });
 
+const projectDetailRoute = createRoute({
+  getParentRoute: () => authenticatedRoute,
+  path: '/projects/$projectId',
+  component: () => (
+    <div className="mx-auto max-w-6xl px-6 py-8">
+      <h2 className="text-xl font-bold">Project Detail View</h2>
+      <p className="text-sm text-zinc-500 mt-2">
+        Fitur manajemen canvas dalam project akan hadir di Fase 1.5.
+      </p>
+    </div>
+  ),
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   loginRoute,
   registerRoute,
   authCallbackRoute,
-  authenticatedRoute.addChildren([dashboardRoute]),
+  authenticatedRoute.addChildren([dashboardRoute, projectDetailRoute]),
 ]);
 
 export const router = createRouter({ routeTree });
